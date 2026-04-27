@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Complaint Management System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container flex justify-between items-center">
+            <div class="logo">
+                <i data-lucide="shield-alert"></i>
+                UniGrievance
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="active">Home</a>
+                <a href="register.html">Register</a>
+                <a href="track.html">Track</a>
+                <a href="admin.html">Admin</a>
+                <a href="about.html">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-12 mb-12 flex-col items-center justify-center text-center animate-up" style="flex: 1;">
+        
+        <!-- Hero Section -->
+        <div style="max-width: 700px; margin: 0 auto 5rem;">
+            <h1>Smart Complaint <br><span class="text-gradient">Management System</span></h1>
+            <p style="font-size: 1.15rem; margin-bottom: 2rem;">Efficiently manage and resolve complaints with real-time tracking and admin control. Empowering university excellence through transparent resolution.</p>
+            <div class="flex justify-center gap-4">
+                <a href="register.html" class="btn btn-primary" style="padding: 0.85rem 2rem; font-size: 1rem;">Register Complaint</a>
+                <a href="track.html" class="btn btn-secondary" style="padding: 0.85rem 2rem; font-size: 1rem;">Track Complaint</a>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="grid animate-up delay-100" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 5rem; text-align: left;">
+            <div class="card">
+                <div class="card-icon"><i data-lucide="plus-square"></i></div>
+                <h3>Easy Submission</h3>
+                <p style="font-size: 0.9rem; margin: 0;">Our streamlined interface allows students to file detailed grievances quickly and effortlessly.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i data-lucide="bar-chart-2"></i></div>
+                <h3>Real-Time Tracking</h3>
+                <p style="font-size: 0.9rem; margin: 0;">Monitor every stage of your request with live status updates and timestamped logs.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i data-lucide="layout-dashboard"></i></div>
+                <h3>Admin Dashboard</h3>
+                <p style="font-size: 0.9rem; margin: 0;">Powerful analytics and queue management for institutional administrators.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i data-lucide="shield-check"></i></div>
+                <h3>Secure Data</h3>
+                <p style="font-size: 0.9rem; margin: 0;">Institutional grade security ensuring student privacy and data integrity.</p>
+            </div>
+        </div>
+
+        <!-- How It Works Section -->
+        <div class="animate-up delay-200" style="text-align: left; background: var(--surface-dark); padding: 3rem; border-radius: var(--border-radius); border: 1px solid var(--surface-border);">
+            <h2 class="text-center mb-8">Resolution Pathway</h2>
+            <div class="flex justify-between" style="gap: 1rem;">
+                <div class="step-item">
+                    <div class="step-circle" style="background: var(--primary); color: white;">1</div>
+                    <h4>Submit</h4>
+                    <p style="font-size: 0.85rem;">Detailed complaint entry via portal.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-circle">2</div>
+                    <h4>Validate</h4>
+                    <p style="font-size: 0.85rem;">Automated system verification.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-circle">3</div>
+                    <h4>Review</h4>
+                    <p style="font-size: 0.85rem;">Administrative board assessment.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-circle">4</div>
+                    <h4>Update</h4>
+                    <p style="font-size: 0.85rem;">Corrective actions implemented.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-circle">5</div>
+                    <h4>Track</h4>
+                    <p style="font-size: 0.85rem;">Final resolution and archiving.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Developed by Shitansh Pratap Singh</p>
+            <p class="course-info">Course: BTech | Subject: Software Engineering</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
