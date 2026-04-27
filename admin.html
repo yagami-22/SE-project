@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | UniGrievance</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container flex justify-between items-center">
+            <div class="logo">
+                <i data-lucide="shield-alert"></i>
+                UniGrievance
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="register.html">Register</a>
+                <a href="track.html">Track</a>
+                <a href="admin.html" class="active">Admin</a>
+                <a href="about.html">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-12 mb-12 animate-up" style="flex: 1;">
+        
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h2>Admin Dashboard</h2>
+                <p>Manage and update institutional grievances.</p>
+            </div>
+        </div>
+
+        <div class="grid mb-8" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+            <div class="card flex justify-between items-center" style="padding: 1.5rem;">
+                <div>
+                    <h3 id="stat-total" style="font-size: 2.5rem; margin-bottom: 0;">0</h3>
+                    <p style="margin: 0; font-size: 0.9rem;">Total Complaints</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 50%;">
+                    <i data-lucide="inbox" style="color: var(--text-color);"></i>
+                </div>
+            </div>
+            <div class="card flex justify-between items-center" style="padding: 1.5rem;">
+                <div>
+                    <h3 id="stat-pending" style="font-size: 2.5rem; margin-bottom: 0;">0</h3>
+                    <p style="margin: 0; font-size: 0.9rem;">Pending</p>
+                </div>
+                <div style="background: rgba(245, 158, 11, 0.1); padding: 1rem; border-radius: 50%;">
+                    <i data-lucide="alert-circle" style="color: var(--warning);"></i>
+                </div>
+            </div>
+            <div class="card flex justify-between items-center" style="padding: 1.5rem;">
+                <div>
+                    <h3 id="stat-resolved" style="font-size: 2.5rem; margin-bottom: 0;">0</h3>
+                    <p style="margin: 0; font-size: 0.9rem;">Resolved</p>
+                </div>
+                <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 50%;">
+                    <i data-lucide="check-circle" style="color: var(--success);"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Complaint ID</th>
+                        <th>User Name</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-table-body">
+                    <!-- Populated via JS -->
+                </tbody>
+            </table>
+            
+            <div id="no-data" class="hidden text-center" style="padding: 3rem;">
+                <p>No complaints have been registered yet.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Update Modal -->
+    <div class="modal-overlay" id="update-modal">
+        <div class="modal-content" style="text-align: left; max-width: 450px;">
+            <h3 class="mb-4 text-center">Update Status</h3>
+            
+            <form id="update-form">
+                <input type="hidden" id="edit-id">
+                
+                <div style="background: var(--surface-dark); padding: 1rem; border-radius: var(--border-radius-sm); margin-bottom: 1.5rem;">
+                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Complaint ID</p>
+                    <p id="display-id" style="font-family: monospace; font-size: 1.1rem; margin-bottom: 0; color: var(--primary);"></p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="new-status">New Status</label>
+                    <select id="new-status" class="form-control" required>
+                        <option value="pending">Pending</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                </div>
+
+                <div class="flex gap-2 mt-4">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()" style="flex: 1;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>Developed by Shitansh Pratap Singh</p>
+            <p class="course-info">Course: BTech | Subject: Software Engineering</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        lucide.createIcons();
+
+        const tbody = document.getElementById('admin-table-body');
+        const noData = document.getElementById('no-data');
+        const modal = document.getElementById('update-modal');
+        const updateForm = document.getElementById('update-form');
+
+        function loadDashboard() {
+            const complaints = window.CMS.getComplaints();
+            
+            document.getElementById('stat-total').textContent = complaints.length;
+            document.getElementById('stat-pending').textContent = complaints.filter(c => c.status === 'pending').length;
+            document.getElementById('stat-resolved').textContent = complaints.filter(c => c.status === 'resolved').length;
+
+            tbody.innerHTML = '';
+            
+            if (complaints.length === 0) {
+                noData.classList.remove('hidden');
+            } else {
+                noData.classList.add('hidden');
+                
+                // Sort newest first
+                complaints.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(c => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="font-family: monospace; color: var(--primary);">${c.id}</td>
+                        <td>
+                            <div style="font-weight: 500;">${c.name}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">${c.rollNo}</div>
+                        </td>
+                        <td>${c.type}</td>
+                        <td>${window.CMS.getStatusBadge(c.status)}</td>
+                        <td>
+                            <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="openModal('${c.id}', '${c.status}')">
+                                Update
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        }
+
+        window.openModal = function(id, currentStatus) {
+            document.getElementById('edit-id').value = id;
+            document.getElementById('display-id').textContent = id;
+            document.getElementById('new-status').value = currentStatus;
+            modal.classList.add('active');
+        };
+
+        window.closeModal = function() {
+            modal.classList.remove('active');
+        };
+
+        updateForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('edit-id').value;
+            const status = document.getElementById('new-status').value;
+            
+            window.CMS.updateStatus(id, status);
+            closeModal();
+            loadDashboard();
+        });
+
+        document.addEventListener('DOMContentLoaded', loadDashboard);
+    </script>
+</body>
+</html>

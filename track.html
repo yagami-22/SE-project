@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Complaint | UniGrievance</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container flex justify-between items-center">
+            <div class="logo">
+                <i data-lucide="shield-alert"></i>
+                UniGrievance
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="register.html">Register</a>
+                <a href="track.html" class="active">Track</a>
+                <a href="admin.html">Admin</a>
+                <a href="about.html">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-12 mb-12 flex flex-col items-center animate-up" style="flex: 1;">
+        
+        <div class="card" style="width: 100%; max-width: 600px; margin-bottom: 2rem;">
+            <h2 class="text-center mb-2">Track Your Request</h2>
+            <p class="text-center mb-6">Enter your Complaint ID to view real-time status updates.</p>
+            
+            <form id="track-form" class="flex gap-2">
+                <input type="text" id="track-id" class="form-control" placeholder="e.g. CMP-1234" required style="flex: 1;">
+                <button type="submit" class="btn btn-primary">
+                    <i data-lucide="search" style="width: 18px; height: 18px;"></i> Search
+                </button>
+            </form>
+        </div>
+
+        <div id="result-container" class="card hidden animate-up" style="width: 100%; max-width: 600px;">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Complaint ID</p>
+                    <h3 id="res-id" style="color: var(--primary); margin: 0; font-family: monospace;">CMP-0000</h3>
+                </div>
+                <div id="res-badge">
+                    <!-- Badge gets injected here -->
+                </div>
+            </div>
+
+            <div style="background: var(--surface-dark); padding: 1.5rem; border-radius: var(--border-radius-sm); border: 1px solid var(--surface-border); margin-bottom: 1.5rem;">
+                <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Filed By</p>
+                <p id="res-name" style="margin-bottom: 1rem; font-weight: 500;"></p>
+                
+                <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Category</p>
+                <p id="res-type" style="margin-bottom: 1rem; font-weight: 500;"></p>
+
+                <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Description</p>
+                <p id="res-desc" style="margin-bottom: 0;"></p>
+            </div>
+
+            <div class="flex items-center gap-2" style="font-size: 0.85rem; color: var(--text-muted);">
+                <i data-lucide="clock" style="width: 14px; height: 14px;"></i>
+                Last Updated: <span id="res-date" style="color: var(--text-color);"></span>
+            </div>
+        </div>
+
+        <div id="error-msg" class="hidden text-center mt-4" style="color: var(--danger); background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: var(--border-radius-sm); width: 100%; max-width: 600px;">
+            <i data-lucide="alert-circle" style="display: inline-block; vertical-align: middle; margin-right: 0.5rem;"></i>
+            Complaint ID not found. Please verify and try again.
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Developed by Shitansh Pratap Singh</p>
+            <p class="course-info">Course: BTech | Subject: Software Engineering</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        lucide.createIcons();
+
+        const form = document.getElementById('track-form');
+        const resultContainer = document.getElementById('result-container');
+        const errorMsg = document.getElementById('error-msg');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('track-id').value.trim();
+            
+            const complaint = window.CMS.getComplaintById(id);
+            
+            if (complaint) {
+                errorMsg.classList.add('hidden');
+                
+                document.getElementById('res-id').textContent = complaint.id;
+                document.getElementById('res-badge').innerHTML = window.CMS.getStatusBadge(complaint.status);
+                document.getElementById('res-name').textContent = `${complaint.name} (${complaint.rollNo}) - ${complaint.department}`;
+                document.getElementById('res-type').textContent = complaint.type;
+                document.getElementById('res-desc').textContent = complaint.description;
+                document.getElementById('res-date').textContent = window.CMS.formatDate(complaint.date);
+                
+                resultContainer.classList.remove('hidden');
+            } else {
+                resultContainer.classList.add('hidden');
+                errorMsg.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

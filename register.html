@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Complaint | UniGrievance</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container flex justify-between items-center">
+            <div class="logo">
+                <i data-lucide="shield-alert"></i>
+                UniGrievance
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="register.html" class="active">Register</a>
+                <a href="track.html">Track</a>
+                <a href="admin.html">Admin</a>
+                <a href="about.html">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-12 mb-12 flex items-center justify-center animate-up" style="flex: 1;">
+        
+        <div class="card" style="width: 100%; max-width: 600px;">
+            <h2 class="text-center mb-2">Register Complaint</h2>
+            <p class="text-center mb-8">Please provide detailed information to help us resolve your issue.</p>
+            
+            <form id="complaint-form">
+                <div class="form-group">
+                    <label class="form-label" for="name">Full Name</label>
+                    <input type="text" id="name" class="form-control" placeholder="John Doe" required>
+                </div>
+                
+                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="roll-no">Roll Number</label>
+                        <input type="text" id="roll-no" class="form-control" placeholder="e.g., 2023CS001" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="department">Department</label>
+                        <select id="department" class="form-control" required>
+                            <option value="" disabled selected>Select Department</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Mechanical">Mechanical</option>
+                            <option value="Civil">Civil</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="type">Complaint Type</label>
+                    <select id="type" class="form-control" required>
+                        <option value="" disabled selected>Select Category</option>
+                        <option value="Academic">Academic</option>
+                        <option value="Hostel & Mess">Hostel & Mess</option>
+                        <option value="Infrastructure">Infrastructure & IT</option>
+                        <option value="Administration">Administration</option>
+                        <option value="Disciplinary">Disciplinary</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="description">Complaint Description</label>
+                    <textarea id="description" class="form-control" placeholder="Describe your issue in detail..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-4" style="width: 100%; padding: 1rem;">
+                    Submit Complaint
+                    <i data-lucide="send" style="width: 18px; height: 18px;"></i>
+                </button>
+            </form>
+        </div>
+
+    </main>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="success-modal">
+        <div class="modal-content">
+            <div class="success-icon">
+                <i data-lucide="check-circle" style="width: 32px; height: 32px;"></i>
+            </div>
+            <h2 class="mb-2">Submission Successful!</h2>
+            <p style="font-size: 0.95rem;">Your complaint has been securely registered in our system.</p>
+            
+            <div style="background: var(--surface-dark); padding: 1.5rem; border-radius: var(--border-radius-sm); border: 1px dashed var(--primary); margin: 1.5rem 0;">
+                <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Your Tracking ID</p>
+                <h3 id="generated-id" style="color: var(--primary); font-family: monospace; letter-spacing: 2px; font-size: 2rem; margin: 0;">CMP-0000</h3>
+            </div>
+
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 2rem;">Please save this ID to track your complaint status.</p>
+            
+            <a href="track.html" class="btn btn-primary" style="width: 100%;">Track Status Now</a>
+            <button onclick="closeModal()" class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;">Close</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>Developed by Shitansh Pratap Singh</p>
+            <p class="course-info">Course: BTech | Subject: Software Engineering</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        lucide.createIcons();
+
+        const form = document.getElementById('complaint-form');
+        const modal = document.getElementById('success-modal');
+        const generatedIdText = document.getElementById('generated-id');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const newComplaint = {
+                name: document.getElementById('name').value,
+                rollNo: document.getElementById('roll-no').value,
+                department: document.getElementById('department').value,
+                type: document.getElementById('type').value,
+                description: document.getElementById('description').value
+            };
+
+            const newId = window.CMS.addComplaint(newComplaint);
+            
+            // Show Success
+            generatedIdText.textContent = newId;
+            modal.classList.add('active');
+            form.reset();
+        });
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+    </script>
+</body>
+</html>
